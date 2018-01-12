@@ -73,5 +73,7 @@ RUN DISPLAY=$DISPLAY \
   fluxbox -display $DISPLAY & \
   x11vnc -forever -usepw -shared -rfbport 5900 -display $DISPLAY &
 
+USER root
+
 EXPOSE 4444
 EXPOSE 5900
