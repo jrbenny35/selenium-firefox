@@ -1,8 +1,11 @@
-FROM selenium/standalone-firefox
+FROM selenium/standalone-firefox-debug
 
 USER root
 
-ENV GEOMETRY="$SCREEN_WIDTH""x""$SCREEN_HEIGHT""x""$SCREEN_DEPTH"
+# Install curl
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    curl
 
 # Install Mysql
 ENV DEBIAN_FRONTEND=noninteractive
@@ -15,12 +18,14 @@ RUN apt-get update -qqy \
 RUN apt-get -qqy \
   install git
 
-# Install nodejs
+# Install nodejs v8
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update -qqy \
   && apt-get -qqy install \
-    nodejs \
-    npm \
-  && ln -s /usr/bin/nodejs /usr/bin/node
+    nodejs
+
+# Install yarn
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash -
 
 # Update to firefox nightly
 ARG FIREFOX_DOWNLOAD_URL=https://download.mozilla.org/?product=firefox-nightly-latest-ssl&lang=en-US&os=linux64
@@ -43,37 +48,9 @@ RUN apt-get update -qqy \
 # Install Tox
 RUN pip install tox
 
-# VNC
-RUN apt-get update -qqy \
-  && apt-get -qqy install \
-    x11vnc \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-
-# fluxbox
-# A fast, lightweight and responsive window manager
-RUN apt-get update -qqy \
-  && apt-get -qqy install \
-    fluxbox \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+WORKDIR /code
 
 USER seluser
 
-# Generating the VNC password as seluser
-# So the service can be started with seluser
-
-RUN mkdir -p ~/.vnc \
-  && x11vnc -storepasswd secret ~/.vnc/passwd
-
-WORKDIR /code
-
-RUN DISPLAY=$DISPLAY \
-  xvfb-run -n $SERVERNUM --server-args="-screen 0 $GEOMETRY -ac +extension RANDR" \
-  java ${JAVA_OPTS} -jar /opt/selenium/selenium-server-standalone.jar \
-  ${SE_OPTS} & \
-  fluxbox -display $DISPLAY & \
-  x11vnc -forever -usepw -shared -rfbport 5900 -display $DISPLAY &
-
-USER root
-
-EXPOSE 4444
 EXPOSE 5900
+EXPOSE 4444
