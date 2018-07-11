@@ -49,7 +49,7 @@ RUN apt-get update -qqy \
 RUN pip install tox
 
 # add circleci user to allow less permission problems on circleci
-RUN useradd --home-dir /code ---create-home --shell /bin/bash --gid root --groups sudo circleci
+RUN useradd --home-dir /code --create-home --shell /bin/bash --gid root --groups sudo circleci
 
 WORKDIR /code
 
