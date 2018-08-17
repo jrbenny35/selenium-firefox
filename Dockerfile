@@ -7,6 +7,11 @@ RUN apt-get update -qqy \
   && apt-get -qqy install \
     curl
 
+# install uuid
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    uuid
+
 # Install Mysql
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qqy \
