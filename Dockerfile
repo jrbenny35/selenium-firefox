@@ -13,24 +13,6 @@ RUN apt-get update -qqy \
   && apt-get -qqy install \
     uuid
 
-# install cmake
-RUN apt-get update -qqy \
-  && apt-get -qqy install \
-    cmake
-
-# install openssl
-RUN apt-get update -qqy \
-  && apt-get -qqy install \
-    libssl-dev
-
-# install libgit2
-RUN apt-get update && wget https://github.com/libgit2/libgit2/archive/v0.27.0.tar.gz \
-  && tar xzf v0.27.0.tar.gz \
-  && cd libgit2-0.27.0/ \
-  && cmake . \
-  && make \
-  && sudo make install
-
 # Install Mysql
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qqy \
@@ -72,8 +54,7 @@ RUN apt-get update -qqy \
 # Install Tox
 RUN pip install tox
 
-# add circleci user to allow less permission problems on circleci
-RUN useradd --home-dir /code --create-home --shell /bin/bash --gid root --groups sudo circleci
+ENV USER=seluser
 
 WORKDIR /code
 
