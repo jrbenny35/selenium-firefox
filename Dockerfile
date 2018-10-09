@@ -13,6 +13,21 @@ RUN apt-get update -qqy \
   && apt-get -qqy install \
     uuid
 
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    cmake
+# install openssl
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    libssl-dev
+# install libgit2
+RUN apt-get update && wget https://github.com/libgit2/libgit2/archive/v0.27.0.tar.gz \
+  && tar xzf v0.27.0.tar.gz \
+  && cd libgit2-0.27.0/ \
+  && cmake . \
+  && make \
+  && sudo make install
+
 # Install Mysql
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qqy \
