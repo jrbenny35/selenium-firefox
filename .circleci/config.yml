@@ -24,4 +24,4 @@ workflows:
               only:
                 - master
     jobs:
-      - build-deploy:
+      - build-deploy
