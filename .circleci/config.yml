@@ -10,7 +10,7 @@ jobs:
           name: Build docker image and push to repo
           command: |
             docker version
-            docker build -t "${DOCKERHUB_USER}":latest .
+            docker build -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
             docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest
 workflows:
