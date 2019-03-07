@@ -1,16 +1,28 @@
 version: 2.0
 
 jobs:
-  build-deploy: # build for the master branch
+  build-deploy-python2: # build for the master branch
     machine: true
     working_directory: ~/selenium-firefox
     steps:
       - checkout
       - run:
-          name: Build docker image and push to repo
+          name: Build python 2 docker image and push to repo
           command: |
             docker version
-            docker build -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest .
+            docker build -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python2-latest .
+            docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
+            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest
+  build-deploy-python3: # build for the master branch
+    machine: true
+    working_directory: ~/selenium-firefox
+    steps:
+      - checkout
+      - run:
+          name: Build python 3 docker image and push to repo
+          command: |
+            docker version
+            docker build -f Dockerfile.python3 -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
             docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest
 workflows:
@@ -24,4 +36,5 @@ workflows:
               only:
                 - master
     jobs:
-      - build-deploy
+      - build-deploy-python2
+      - build-deploy-python3
