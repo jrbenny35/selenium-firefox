@@ -28,6 +28,13 @@ jobs:
 workflows:
   version: 2
   build-push:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - build-deploy-python2
       - build-deploy-python3
