@@ -12,7 +12,7 @@ jobs:
             docker version
             docker build -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python2-latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
-            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest
+            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python2-latest
   build-deploy-python3: # build for the master branch
     machine: true
     working_directory: ~/selenium-firefox
@@ -24,17 +24,10 @@ jobs:
             docker version
             docker build -f Dockerfile.python3 -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
-            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":latest
+            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-latest
 workflows:
   version: 2
   build-push:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
     jobs:
       - build-deploy-python2
       - build-deploy-python3
