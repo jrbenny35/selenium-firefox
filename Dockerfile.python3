@@ -61,12 +61,13 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL \
 # Install python
 RUN apt-get update -qqy \
   && apt-get -qqy install \
+    python3.7 \
     python3-pip \
     python3-dev \
     build-essential
 
 # Set python 3 as default
-RUN echo 'alias python=python3' >> ~/.bashrc
+RUN echo 'alias python=python3.7' >> ~/.bashrc
 
 # Install Tox
 RUN pip3 install tox "virtualenv<20.0.0"
