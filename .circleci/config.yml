@@ -40,4 +40,7 @@ workflows:
   build-push-release:
     jobs:
       - build-deploy-python3-release:
+          requires:
+            - build_approval
+      - build_approval:
           type: approval
