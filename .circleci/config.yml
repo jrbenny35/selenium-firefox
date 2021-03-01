@@ -1,18 +1,6 @@
 version: 2.0
 
 jobs:
-  build-deploy-python2: # build for the master branch
-    machine: true
-    working_directory: ~/selenium-firefox
-    steps:
-      - checkout
-      - run:
-          name: Build python 2 docker image and push to repo
-          command: |
-            docker version
-            docker build -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python2-latest .
-            docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
-            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python2-latest
   build-deploy-python3: # build for the master branch
     machine: true
     working_directory: ~/selenium-firefox
@@ -25,16 +13,35 @@ jobs:
             docker build -f Dockerfile.python3 -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
             docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-latest
+  build-deploy-python3-release: # build for the master branch
+    machine: true
+    working_directory: ~/selenium-firefox
+    steps:
+      - checkout
+      - run:
+          name: Build python 3 docker image and push to repo
+          command: |
+            docker version
+            docker build -f Dockerfile.python3 -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest .
+            docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
+            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest
 workflows:
   version: 2
-  build-push:
+  build-push-nightly:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "0 0 15 * *"
           filters:
             branches:
               only:
                 - master
     jobs:
-      - build-deploy-python2
       - build-deploy-python3
+  build-push-release:
+    filters:
+      branches:
+        only:
+          - master
+    jobs:
+      - build-deploy-python3-release:
+          type: approval
