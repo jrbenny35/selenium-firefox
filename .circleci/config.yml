@@ -38,10 +38,6 @@ workflows:
     jobs:
       - build-deploy-python3
   build-push-release:
-    filters:
-      branches:
-        only:
-          - master
     jobs:
       - build-deploy-python3-release:
           type: approval
