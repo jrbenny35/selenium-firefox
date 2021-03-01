@@ -22,7 +22,7 @@ jobs:
           name: Build python 3 docker image and push to repo
           command: |
             docker version
-            docker build -f Dockerfile.python3 -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest .
+            docker build -f Dockerfile.python3.release -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
             docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest
 workflows:
