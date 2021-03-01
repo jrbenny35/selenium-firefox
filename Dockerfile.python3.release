@@ -1,0 +1,73 @@
+FROM selenium/standalone-firefox-debug
+
+USER root
+
+
+# Install curl
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    curl
+
+# install uuid
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    uuid
+
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    cmake
+# install openssl
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    libssl-dev
+# install libgit2
+RUN apt-get update && wget https://github.com/libgit2/libgit2/archive/v0.27.0.tar.gz \
+  && tar xzf v0.27.0.tar.gz \
+  && cd libgit2-0.27.0/ \
+  && cmake . \
+  && make \
+  && sudo make install
+
+# Install Mysql
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    mysql-server \
+    libmysqlclient-dev
+
+# Install git
+RUN apt-get -qqy \
+  install git
+
+# Install nodejs v8
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    nodejs
+
+# Install yarn
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash -
+
+# Install python
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    python3.8 \
+    python3-pip \
+    python3-dev \
+    build-essential
+
+# Set python 3 as default
+RUN echo 'alias python=python3.7' >> ~/.bashrc
+
+# Install Tox
+RUN pip3 install tox "virtualenv<20.0.0"
+
+ENV USER=seluser
+ENV PYTHON_VERSION_MAJOR 3
+
+WORKDIR /code
+
+USER seluser
+
+EXPOSE 5900
+EXPOSE 4444
