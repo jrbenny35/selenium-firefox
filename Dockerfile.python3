@@ -21,9 +21,9 @@ RUN apt-get update -qqy \
   && apt-get -qqy install \
     libssl-dev
 # install libgit2
-RUN apt-get update && wget https://github.com/libgit2/libgit2/archive/v0.27.0.tar.gz \
-  && tar xzf v0.27.0.tar.gz \
-  && cd libgit2-0.27.0/ \
+RUN apt-get update && wget https://github.com/libgit2/libgit2/archive/v1.1.1.tar.gz \
+  && tar xzf v1.1.1.tar.gz \
+  && cd libgit2-1.1.1/ \
   && cmake . \
   && make \
   && sudo make install
@@ -40,7 +40,7 @@ RUN apt-get -qqy \
   install git
 
 # Install nodejs v8
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update -qqy \
   && apt-get -qqy install \
     nodejs
@@ -61,13 +61,13 @@ RUN wget --no-verbose -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL \
 # Install python
 RUN apt-get update -qqy \
   && apt-get -qqy install \
-    python3.7 \
+    python3.8 \
     python3-pip \
     python3-dev \
     build-essential
 
 # Set python 3 as default
-RUN echo 'alias python=python3.7' >> ~/.bashrc
+RUN echo 'alias python=python3.8' >> ~/.bashrc
 
 # Install Tox
 RUN pip3 install tox "virtualenv<20.0.0"
