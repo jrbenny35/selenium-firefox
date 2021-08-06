@@ -66,11 +66,13 @@ RUN apt-get update -qqy \
     python3-dev \
     build-essential
 
+RUN python3 -m pip install --upgrade pip
+
 # Set python 3 as default
 RUN echo 'alias python=python3.8' >> ~/.bashrc
 
 # Install Tox
-RUN pip3 install tox "virtualenv<20.0.0"
+RUN pip3 install tox
 
 ENV USER=seluser
 ENV PYTHON_VERSION_MAJOR 3
