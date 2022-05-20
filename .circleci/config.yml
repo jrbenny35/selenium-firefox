@@ -25,6 +25,18 @@ jobs:
             docker build -f Dockerfile.python3.release -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
             docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest
+  build-deploy-python3-firefox: # build for the master branch
+    machine: true
+    working_directory: ~/selenium-firefox
+    steps:
+      - checkout
+      - run:
+          name: Build python 3 docker image and push to repo
+          command: |
+            docker version
+            docker build -f Dockerfile.python3.firefox -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-firefox .
+            docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
+            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest
 workflows:
   version: 2
   build-push-nightly:
@@ -44,3 +56,13 @@ workflows:
             - build_approval
       - build_approval:
           type: approval
+  build-push-nightly-python3:
+    triggers:
+      - schedule:
+          cron: "0 0 15 * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build-deploy-python3-firefox
