@@ -36,7 +36,7 @@ jobs:
             docker version
             docker build -f Dockerfile.python3.firefox -t "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-firefox .
             docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_PASS}"
-            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-release-latest
+            docker push "${DOCKERHUB_USER}"/"${DOCKERHUB_REPO}":python3-firefox
 workflows:
   version: 2
   build-push-nightly:
